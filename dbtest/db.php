@@ -4,7 +4,7 @@ ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 function getDB(){
     global $db;
-    //this function returns an existing connection or creates a new one if needed
+    //thissss function returns an existing connection or creates a new one if needed
     //and assigns it to the $db variable
     if(!isset($db)) {
         try{
