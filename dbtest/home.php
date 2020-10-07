@@ -3,8 +3,8 @@ session_start();
 ?>
 <ul>
   <li><a href="home.php">Home</a></li>
-  <li><a href="sample_login.php">Login</a></li>
-  <li><a href="sample_reg.php">Register</a></li>
+  <li><a href="login1.php">Login</a></li>
+  <li><a href="Registration_Form.php">Register</a></li>
   <li><a href="logout.php">Logout</a></li>
 </ul>
 <?php
