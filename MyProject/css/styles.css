@@ -1,7 +1,7 @@
 /* design intentionally made horrible to see who doesn't change it*/
 body {
     font-family: system;
-    font-size: 1.5em;
+    font-size: 2.0em;
 }
 
 ul[class="nav"] {
