@@ -69,4 +69,55 @@ function getMessages() {
 }
 
 //end flash
+
+function getState($n) {
+    switch ($n) {
+        case 0:
+            echo "Stasis";
+            break;
+        case 1:
+            echo "Incubating";
+            break;
+        case 2:
+            echo "Hatching";
+            break;
+        case 3:
+            echo "Hatched";
+            break;
+        case 4:
+            echo "Expired";
+            break;
+        default:
+            echo "Unsupported state: " . safer_echo($n);
+            break;
+    }
+}
+
+function getURL($path) {
+    if (substr($path, 0, 1) == "/") {
+        return $path;
+    }
+    return $_SERVER["CONTEXT_PREFIX"] . "/IT202/project/$path";
+}
+
+function getBalance() {
+    if (is_logged_in() && isset($_SESSION["user"]["balance"])) {
+        return $_SESSION["user"]["balance"];
+    }
+    return 0;
+}
+function calcNextEggCost(){
+	if(is_logged_in()){
+		$db = getDB();
+		$stmt = $db->prepare("SELECT count(id) as eggs from F20_Eggs where user_id = :id");
+		$stmt->execute([":id"=>get_user_id()]);
+		$result = $stmt->fetch(PDO::FETCH_ASSOC);
+		if($result && isset($result["eggs"])){
+			$c = (int)$result["eggs"];
+			$base_cost = 10;
+			return $c * $base_cost; // first is free
+		}
+	}
+	return -1;//-1 will be invalid
+}
 ?>
