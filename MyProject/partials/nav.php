@@ -27,7 +27,7 @@ require_once(__DIR__ . "/../lib/helpers.php");
 
         <?php if (has_role("Admin")): ?>
 
-            <li><a href="<?php echo getURL("test/test_create_egg.php"); ?>">Create Egg</a></li>
+            <li><a href="<?php echo getURL("test/test_create_product.php"); ?>">Create Product</a></li>
 
             
 
