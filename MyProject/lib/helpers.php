@@ -97,7 +97,7 @@ function getURL($path) {
     if (substr($path, 0, 1) == "/") {
         return $path;
     }
-    return $_SERVER["CONTEXT_PREFIX"] . "/IT202/MyProject/$path";
+    return $_SERVER["CONTEXT_PREFIX"] . "/IT202Project/MyProject/$path";
 }
 
 function getBalance() {
