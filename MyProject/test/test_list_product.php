@@ -106,7 +106,7 @@ if (isset($_POST["search"]) && !empty($query)) {
 
                             <a type="button" href="test_edit_product.php?id=<?php safer_echo($r['id']); ?>">Edit</a>
 
-                            <a type="button" href="test_view_egg.php?id=<?php safer_echo($r['id']); ?>">View</a>
+                            <a type="button" href="test_view_product.php?id=<?php safer_echo($r['id']); ?>">View</a>
 
                         </div>
 
