@@ -36,7 +36,7 @@ if (isset($id)) {
 
     $db = getDB();
 
-    $stmt = $db->prepare("SELECT Products.id,name,quantity,price,description,Products.modified,Products.created, user_id, Users.username FROM Products as prod JOIN Users on prod.user_id = Users.id where prod.id = :id");
+    $stmt = $db->prepare("SELECT Products.id,name,quantity,price,description,Products.modified,Products.created, user_id, Users.username FROM Products  JOIN Users on Products.user_id = Users.id where Products.id = :id");
 
     $r = $stmt->execute([":id" => $id]);
 
@@ -74,7 +74,7 @@ if (isset($id)) {
 
                 <div>Price: <?php safer_echo($result["price"]); ?></div>
 
-                <div>Description: <?php getState($result["description"]); ?></div>
+                <div>Description: <?php safer_echo($result["description"]); ?></div>
 
                 <div>created: <?php safer_echo($result["created"]); ?></div>
 
