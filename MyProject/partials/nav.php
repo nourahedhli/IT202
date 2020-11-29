@@ -30,6 +30,7 @@ require_once(__DIR__ . "/../lib/helpers.php");
             <li><a href="<?php echo getURL("test/test_create_product.php"); ?>">Create Product</a></li>
 
             <li><a href="<?php echo getURL("test/test_list_product.php"); ?>">View Products</a></li>            
+<li><a href="<?php echo getURL("test/test_create_cart.php"); ?>"> Cart</a></li>
 
             
 
