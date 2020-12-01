@@ -115,7 +115,7 @@ $cost = calcNextEggCost();
                 </div>
                 <div class="card-footer">
                     <button type="button" onclick="makePurchase();" class="btn btn-primary btn-lg">Purchase
-                        (Cost: <?php echo $cost; ?>)
+                        (price: <?php echo $cost; ?>)
                     </button>
                 </div>
                 </div>
@@ -129,11 +129,46 @@ $cost = calcNextEggCost();
                 </div>
                 <div class="card-footer">
                     <button type="button" onclick="alert('Coming soon');" class="btn btn-primary btn-lg">Purchase
-                        (Cost: <?php echo $cost; ?>)
+                        (Price: <?php echo $cost; ?>)
                     </button>
                 </div>
                 </div>
             </div>
         </div>
+
+        <div class="col-2">
+            <div class="card">
+                <div class="card-body">
+                    <div class="card-title">
+                        Purchase Orange
+                    </div>
+                    <div class="card-footer">
+                        <button type="button" onclick="makePurchase();" class="btn btn-primary btn-lg">Purchase
+                            (Price: <?php echo $cost; ?>)
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+        <div class="col-2">
+            <div class="card">
+                <div class="card-body">
+                    <div class="card-title">
+                        Purchase Apples
+                    </div>
+                    <div class="card-footer">
+                        <button type="button" onclick="makePurchase();" class="btn btn-primary btn-lg">Purchase
+                            (Price: <?php echo $cost; ?>)
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
     </div>
 <?php require(__DIR__ . "/partials/flash.php");
