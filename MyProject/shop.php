@@ -46,7 +46,7 @@ $cost = calcNextEggCost();
                     let json = JSON.parse(this.responseText);
                     if (json) {
                         if (json.status == 200) {
-                            alert("Congrats you received 1 " + json.egg.name);
+                            alert("Congrats you received 1 " + json.product.name);
                             location.reload();
                         } else {
                             alert(json.error);
@@ -54,7 +54,7 @@ $cost = calcNextEggCost();
                     }
                 }
             };
-            xhttp.open("POST", "<?php echo getURL("api/purchase_egg.php");?>", true);
+            xhttp.open("POST", "<?php echo getURL("api/purchase_product.php");?>", true);
             //this is required for post ajax calls to submit it as a form
             xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
             //map any key/value data similar to query params
@@ -111,7 +111,7 @@ $cost = calcNextEggCost();
             <div class="card">
                 <div class="card-body">
                 <div class="card-title">
-                    Purchase Random Egg
+                    Purchase Milk
                 </div>
                 <div class="card-footer">
                     <button type="button" onclick="makePurchase();" class="btn btn-primary btn-lg">Purchase
@@ -125,7 +125,7 @@ $cost = calcNextEggCost();
             <div class="card">
                 <div class="card-body">
                 <div class="card-title">
-                    Purchase Random Incubator
+                    Purchase Butter
                 </div>
                 <div class="card-footer">
                     <button type="button" onclick="alert('Coming soon');" class="btn btn-primary btn-lg">Purchase
