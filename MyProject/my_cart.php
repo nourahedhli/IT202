@@ -10,17 +10,17 @@ if (!is_logged_in()) {
 $db = getDB();
 
 if(isset($_POST["delete"])){
-    $stmt = $db->prepare("DELETE FROM F20_Cart where id = :id");
+    $stmt = $db->prepare("DELETE FROM Cart where id = :id");
     $r = $stmt->execute([":id"=>$_POST["cartId"]]);
     //fix for example bug
-    //$stmt = $db->prepare("DELETE FROM F20_Cart where id = :id AND user_id = :uid");
+    //$stmt = $db->prepare("DELETE FROM Cart where id = :id AND user_id = :uid");
     //$r = $stmt->execute([":id"=>$_POST["cartId"], ":uid"=>get_user_id()]);
     if($r){
         flash("Deleted item from cart", "success");
     }
 }
 if(isset($_POST["update"])){
-    $stmt = $db->prepare("UPDATE F20_Cart set quantity = :q where id = :id");
+    $stmt = $db->prepare("UPDATE Cart set quantity = :q where id = :id");
     $r = $stmt->execute([":id"=>$_POST["cartId"], ":q"=>$_POST["quantity"]]);
     if($r){
         flash("Updated quantity", "success");
@@ -28,7 +28,7 @@ if(isset($_POST["update"])){
 }
 
 
-$stmt = $db->prepare("SELECT c.id, p.name, c.price, c.quantity, (c.price * c.quantity) as sub from F20_Cart c JOIN F20_Products p on c.product_id = p.id where c.user_id = :id");
+$stmt = $db->prepare("SELECT c.id, p.name, c.price, c.quantity, (c.price * c.quantity) as sub from Cart c JOIN Products p on c.product_id = p.id where c.user_id = :id");
 $stmt->execute([":id"=>get_user_id()]);
 $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
