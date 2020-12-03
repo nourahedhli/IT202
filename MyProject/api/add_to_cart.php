@@ -8,13 +8,13 @@ if (!is_logged_in()) {
 if(isset($_POST["itemId"])){
     $itemId = (int)$_POST["itemId"];
     $db = getDB();
-    $stmt = $db->prepare("SELECT name, price from F20_Products where id = :id");
+    $stmt = $db->prepare("SELECT name, price from Products where id = :id");
     $stmt->execute([":id"=>$itemId]);
     $result = $stmt->fetch(PDO::FETCH_ASSOC);
     if($result) {
         $name = $result["name"];
         $price = $result["price"];
-        $stmt = $db->prepare("INSERT INTO F20_Cart (user_id, product_id, price) VALUES(:user_id, :product_id, :price) ON DUPLICATE KEY UPDATE quantity = quantity +1, price = :price");
+        $stmt = $db->prepare("INSERT INTO Cart (user_id, product_id, price) VALUES(:user_id, :product_id, :price) ON DUPLICATE KEY UPDATE quantity = quantity +1, price = :price");
         $r = $stmt->execute([":user_id"=>get_user_id(), ":product_id"=>$itemId, ":price"=>$price]);
         if ($r) {
             $response = ["status" => 200, "message" => "Added $name to cart"];
