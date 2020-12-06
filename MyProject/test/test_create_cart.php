@@ -83,7 +83,7 @@ if(isset($_POST["save"])){
 	":created"=>$created,
         ":modified"=>$modified,
         
-        ":user_id"=>$user
+        ":user"=>$user
 
 
 	]);

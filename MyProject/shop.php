@@ -8,25 +8,51 @@ if (!is_logged_in()) {
 
 ?>
 <?php
-$db = getDB();
+
+
+?>
+
+<?php
+
+$query = "";
+
+$results = [];
+
+if (isset($_POST["query"])) {
+
+    $query = $_POST["query"];
+
+}
+
+if (isset($_POST["search"]) && !empty($query)) {
+    $db = getDB();
 //fetch and update latest user's balance
 
 //fetch item list
-$stmt = $db->prepare("SELECT * FROM Products WHERE quantity > 0 ORDER BY CREATED DESC LIMIT 10");
-$stmt->execute();
-$items = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    $stmt = $db->prepare("SELECT * FROM Products WHERE quantity > 0 ORDER BY CREATED DESC LIMIT 10");
+    $stmt->execute();
+    $r = $stmt->execute([":q" => "%$query%"]);
+    if ($r) {
 
+        $items = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
+    } else {
+
+        flash("There was a problem fetching the results");
+
+    }
+
+}
 
 
 ?>
     <script>
         //php will exec first so just the value will be visible on js side
-        
 
-        
+
+
         function addToCart(itemId, cost){
-            
+
             //https://www.w3schools.com/xml/ajax_xmlhttprequest_send.asp
             let xhttp = new XMLHttpRequest();
             xhttp.onreadystatechange = function () {
@@ -68,15 +94,16 @@ $items = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 </div>
             </div>
         <?php endforeach;?>
-        
-
-      
 
 
 
-        
+
+
+
+
 
 
 
     </div>
 <?php require(__DIR__ . "/partials/flash.php");
+
