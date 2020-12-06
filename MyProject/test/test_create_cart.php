@@ -80,10 +80,10 @@ if(isset($_POST["save"])){
         ":price"=>$price,
 
        
-
+	":created"=>$created,
         ":modified"=>$modified,
-        ":created"=>$created,
-        ":user_id" => $user
+        
+        ":user_id"=>$user
 
 
 	]);
