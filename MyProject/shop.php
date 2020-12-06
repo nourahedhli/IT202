@@ -16,7 +16,7 @@ if (!is_logged_in()) {
 
 $query = "";
 
-$results = [];
+$items = [];
 
 if (isset($_POST["query"])) {
 
