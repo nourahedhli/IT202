@@ -36,7 +36,15 @@ if (isset($id)) {
 
     $db = getDB();
 
-    $stmt = $db->prepare("SELECT CartProduct.id,CartProduct.name,CartProduct.price,CartProduct.quantity, Users.username, product.name as product FROM Cart as CartProduct JOIN Users on CartProduct.user_id = Users.id LEFT JOIN Products product on product.id = CartProduct.product_id where CartProduct.id = :id");
+    $stmt = $db->prepare("SELECT pro.id,pro.name,pro.price,pro.quantity, Users.username, products.name as product FROM Cart as pro JOIN Users on pro.user_id = Users.id LEFT JOIN Products products on products.id = pro.product_id where pro.id = :id");
+
+
+
+
+    
+
+
+
 
     $r = $stmt->execute([":id" => $id]);
 
@@ -54,7 +62,7 @@ if (isset($id)) {
 
 ?>
 
-    <h3>View Incubator</h3>
+    <h3>View Cart</h3>
 
 <?php if (isset($result) && !empty($result)): ?>
 
@@ -70,13 +78,13 @@ if (isset($id)) {
 
             <div>
 
-                <p>Price</p>
+                <p>Products</p>
 
                 <div>Price: <?php safer_echo($result["price"]); ?></div>
 
                 <div>created: <?php safer_echo($result["created"]); ?></div>
 
-                <div>product: <?php safer_echo($result["product"]); ?></div>
+                <div>product_id: <?php safer_echo($result["product_id"]); ?></div>
 
                 <div>Owned by: <?php safer_echo($result["username"]); ?></div>
 
@@ -93,4 +101,5 @@ if (isset($id)) {
 <?php endif; ?>
 
 <?php require(__DIR__ . "/../partials/flash.php");
+
 

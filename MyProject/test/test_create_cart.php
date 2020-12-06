@@ -18,6 +18,7 @@ if (!has_role("Admin")) {
     <div class=”container-fluid”>
         <h3> Create Cart </h3>
         <form method="POST">
+
             <div class=”form-group”>
                <label>Product Id </label>
               <input name="product_id" placeholder="product_id"/>
@@ -67,7 +68,7 @@ if(isset($_POST["save"])){
 
     $db = getDB();
 
-    $stmt = $db->prepare("INSERT INTO Cart (product_id, quantity, price, created, modified, user_id) VALUES( :product_id, :quantity, :price, : created, : modified, :user)");
+    $stmt = $db->prepare("INSERT INTO Cart (product_id, quantity, price, created, modified, user_id) VALUES( :product_id, :quantity, :price, :created, :modified, :user)");
 
     $r = $stmt->execute([
 
@@ -78,10 +79,11 @@ if(isset($_POST["save"])){
 
         ":price"=>$price,
 
-        ":created"=>$created,
+       
 
-        "modified"=>$modified,
-        “:user” => $user
+        ":modified"=>$modified,
+        ":created"=>$created,
+        ":user_id" => $user
 
 
 	]);
