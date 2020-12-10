@@ -53,7 +53,7 @@ $items = [];
 $param=[];
 $selectedCat='';
 $a= null;
-
+$query = "SELECT DISTINCT category from Products WHERE 1 = 1";
 if (isset($_POST["Search"])) {
 // load query string
     if (isset($_POST["query"])) {
@@ -83,7 +83,8 @@ if (isset($_POST["Search"])) {
     }
 
 
-    $query = "SELECT name, id,price,category,quantity,description, user_id from Products WHERE 1 = 1";
+
+
 
 
     $db = getDB();
@@ -158,8 +159,19 @@ if (isset($_POST["Search"])) {
             xhttp.send("itemId="+itemId);
         }
     </script>
+
+    <h1>Shop</h1>
+
+    <form method="POST">
+
+        <input name="query" placeholder="Search" value="<?php safer_echo($query); ?>"/>
+
+        <input type="submit" value="Search" name="search"/>
+
+    </form>
+
     <div class="container">
-        <h1>Shop</h1>
+
         <div class="row">
             <div class="card-deck">
                 <?php foreach($items as $item):?>
