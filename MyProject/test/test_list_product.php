@@ -30,7 +30,7 @@ if (isset($_POST["search"]) && !empty($query)) {
 
     $db = getDB();
 
-    $stmt = $db->prepare("SELECT id,name,quantity,price,description,modified,created, user_id from Products WHERE name like :q LIMIT 10");
+    $stmt = $db->prepare("SELECT id,name,quantity,price,category,description,modified,created, user_id from Products WHERE name like :q LIMIT 10");
 
     $r = $stmt->execute([":q" => "%$query%"]);
 
@@ -88,12 +88,17 @@ if (isset($_POST["search"]) && !empty($query)) {
 
                         <div>
 
-                            <div>price:</div>
+                            <div>Price:</div>
 
                             <div><?php safer_echo($r["price"]); ?></div>
 
                         </div>
 
+                        <div>Category:</div>
+
+                        <div><?php safer_echo($r["category"]); ?></div>
+
+                    </div>
                         <div>
 
                             <div>Owner Id:</div>
@@ -125,5 +130,3 @@ if (isset($_POST["search"]) && !empty($query)) {
     </div>
 
 <?php require(__DIR__ . "/../partials/flash.php");
-
-

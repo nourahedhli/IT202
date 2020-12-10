@@ -6,43 +6,87 @@ if (!is_logged_in()) {
     die(header("Location: login.php"));
 }
 
+$per_page = 10;
+
+$db = getDB();
+$query = "SELECT count(*) as total from Products e LEFT JOIN Cart i on e.id = i.product_id where e.user_id = :id";
+$params = [":id"=>get_user_id()];
+paginate($query, $params, $per_page);
+/
+
+$stmt = $db->prepare("SELECT e.*, i.name as inc from Products e LEFT JOIN Cart i on e.id = i.product_id where e.user_id = :id LIMIT :offset, :count");
+//need to use bindValue to tell PDO to create these as ints
+//otherwise it fails when being converted to strings (the default behavior)
+//$offset is defined in paginate(), safe to ignore IDE error
+$stmt->bindValue(":offset", $offset, PDO::PARAM_INT);
+$stmt->bindValue(":count", $per_page, PDO::PARAM_INT);
+$stmt->bindValue(":id", get_user_id());
+$stmt->execute();
+$e = $stmt->errorInfo();
+if($e[0] != "00000"){
+    flash(var_export($e, true), "alert");
+}
+$results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
 ?>
+
+
 <?php
 
-
-?>
-
-<?php
-
-$query = "";
-
+$queryString = null;
+$cat= null;
 $items = [];
+$param=[];
+$selectedCat='';
 
+
+// load query string
 if (isset($_POST["query"])) {
 
-    $query = $_POST["query"];
+    $queryString = $_POST["query"];
+    $_SESSION["query"] = $a;
+
+}
+else if (isset($_SESSION["query"])){
+
+    $queryString=$_SESSION["query"];
+
 
 }
 
-if (isset($_POST["search"]) && !empty($query)) {
-    $db = getDB();
-//fetch and update latest user's balance
+//load category
 
-//fetch item list
-    $stmt = $db->prepare("SELECT * FROM Products WHERE quantity > 0 ORDER BY CREATED DESC LIMIT 10");
-    $stmt->execute();
-    $r = $stmt->execute([":q" => "%$query%"]);
-    if ($r) {
+if (isset($_POST["cat"])) {
 
-        $items = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    $queryString = $_POST["cat"];
+    $_SESSION["cat"] = $a;
 
-    } else {
+}
+else if (isset($_SESSION["cat"])){
 
-        flash("There was a problem fetching the results");
+    $queryString=$_SESSION["cat"];
+
+
+}
+$query = "SELECT name, id,price,category,quantity,description, user_id from Products WHERE 1 = 1";
+
+
+$db = getDB();
+
+    if (isset($queryString)){
+        $query .= " And name like :q";
+        $param[":q"]= "%$queryString%";
 
     }
+if (isset($cat)){
+    $query .= " And category like :q";
+    $param[":cat"]= "$cat";
 
 }
+
+$stmt = $db->prepare($query);
+$r = $stmt->execute($param);
+
 
 
 ?>
@@ -74,6 +118,7 @@ if (isset($_POST["search"]) && !empty($query)) {
             xhttp.send("itemId="+itemId);
         }
     </script>
+
     <div class="container-fluid">
         <?php foreach($items as $item):?>
             <div class="col">
@@ -92,6 +137,7 @@ if (isset($_POST["search"]) && !empty($query)) {
                         </div>
                     </div>
                 </div>
+                <?php include(__DIR__."/partials/pagination.php");?>
             </div>
         <?php endforeach;?>
 
@@ -106,4 +152,3 @@ if (isset($_POST["search"]) && !empty($query)) {
 
     </div>
 <?php require(__DIR__ . "/partials/flash.php");
-
