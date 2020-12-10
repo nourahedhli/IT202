@@ -54,54 +54,55 @@ $param=[];
 $selectedCat='';
 $a= null;
 
+if (isset($_POST["Search"])) {
 // load query string
-if (isset($_POST["query"])) {
+    if (isset($_POST["query"])) {
 
-    $queryString = $_POST["query"];
-    $_SESSION["query"] = $a;
+        $queryString = $_POST["query"];
+        $_SESSION["query"] = $a;
 
-}
-else if (isset($_SESSION["query"])){
+    } else if (isset($_SESSION["query"])) {
 
-    $queryString=$_SESSION["query"];
+        $queryString = $_SESSION["query"];
 
 
-}
+    }
 
 //load category
 
-if (isset($_POST["cat"])) {
+    if (isset($_POST["cat"])) {
 
-    $queryString = $_POST["cat"];
-    $_SESSION["cat"] = $a;
+        $queryString = $_POST["cat"];
+        $_SESSION["cat"] = $a;
+
+    } else if (isset($_SESSION["cat"])) {
+
+        $queryString = $_SESSION["cat"];
+
+
+    }
+
+
+    $query = "SELECT name, id,price,category,quantity,description, user_id from Products WHERE 1 = 1";
+
+
+    $db = getDB();
+
+    if (isset($queryString)) {
+        $query .= " And name like :q";
+        $param[":q"] = "%$queryString%";
+
+    }
+    if (isset($cat)) {
+        $query .= " And category like :q";
+        $param[":cat"] = "$cat";
+
+    }
+
+    $stmt = $db->prepare($query);
+    $r = $stmt->execute($param);
 
 }
-else if (isset($_SESSION["cat"])){
-
-    $queryString=$_SESSION["cat"];
-
-
-}
-$query = "SELECT name, id,price,category,quantity,description, user_id from Products WHERE 1 = 1";
-
-
-$db = getDB();
-
-if (isset($queryString)){
-    $query .= " And name like :q";
-    $param[":q"]= "%$queryString%";
-
-}
-if (isset($cat)){
-    $query .= " And category like :q";
-    $param[":cat"]= "$cat";
-
-}
-
-$stmt = $db->prepare($query);
-$r = $stmt->execute($param);
-
-
 
 
 ?>
