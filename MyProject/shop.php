@@ -1,5 +1,7 @@
 <?php require_once(__DIR__ . "/partials/nav.php"); ?>
 <?php
+
+
 if (!is_logged_in()) {
     //this will redirect to login and kill the rest of this script (prevent it from executing)
     flash("You must be logged in to access this page");
@@ -47,64 +49,18 @@ $balance = getBalance();
 $cost = calcNextProductCost();
 
 
-$queryString = null;
-$cat= null;
-$items = [];
-$param=[];
-$selectedCat='';
-$a= null;
-$query = "SELECT DISTINCT category from Products WHERE 1 = 1";
-if (isset($_POST["Search"])) {
-// load query string
-    if (isset($_POST["query"])) {
-
-        $queryString = $_POST["query"];
-        $_SESSION["query"] = $a;
-
-    } else if (isset($_SESSION["query"])) {
-
-        $queryString = $_SESSION["query"];
-
-
-    }
-
-//load category
-
-    if (isset($_POST["cat"])) {
-
-        $queryString = $_POST["cat"];
-        $_SESSION["cat"] = $a;
-
-    } else if (isset($_SESSION["cat"])) {
-
-        $queryString = $_SESSION["cat"];
-
-
-    }
-
-
-
-
-
-
-    $db = getDB();
-
-    if (isset($queryString)) {
-        $query .= " And name like :q";
-        $param[":q"] = "%$queryString%";
-
-    }
-    if (isset($cat)) {
-        $query .= " And category like :q";
-        $param[":cat"] = "$cat";
-
-    }
-
-    $stmt = $db->prepare($query);
-    $r = $stmt->execute($param);
+$category = null;
+$search = null;
+if (isset($_POST["search"])){
+    $cat = $_POST["category"];
 
 }
 
+$stmt = $db->prepare("SELECT DISTINCT category From Products");
+$stmt->execute();
+$cats = $stmt->fetchAll(PDO::FETCH_ASSOC);
+$stmt = $db-> prepare("SELECT * FROM Products LIMIT 10");
+$products = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 ?>
 
@@ -163,12 +119,25 @@ if (isset($_POST["Search"])) {
     <h1>Shop</h1>
 
     <form method="POST">
-
-        <input name="query" placeholder="Search" value="<?php safer_echo($query); ?>"/>
-
-        <input type="submit" value="Search" name="search"/>
-
+        
+            <select name="category">
+               <?php foreach($cats as $c): ?>
+                <option value="<?php echo $c["category"];?>"
+                        <?php echo ($c["category"] == $category?"selected='selected'":""); ?>
+                        >
+                        <?php echo $c["category"];?>
+                        </option>
+                        <?php endforeach; ?>
+            </select>
+        
     </form>
+
+<div>
+
+    <?php foreach($products as $p): ?>
+    <dix>Product: <?php echo $p["name"]; ?> </dix>
+    <?php endforeach;?>
+</div>
 
     <div class="container">
 
@@ -196,11 +165,7 @@ if (isset($_POST["Search"])) {
                 <?php endforeach;?>
             </div>
         </div>
-
-
-
-        <?php include(__DIR__ . "/partials/pagination.php");?>
+        <?php include(__DIR__ . "/partials/pagination.php"); ?>
     </div>
 
-<?php require(__DIR__ . "/partials/flash.php");
-
+    <?php require(__DIR__ . "/partials/flash.php");
