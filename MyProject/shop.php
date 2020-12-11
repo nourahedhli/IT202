@@ -184,7 +184,7 @@ if (isset($_POST["search"])){
             <div class="dropdown">
                 <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     Categories
-                <button/>
+                </button>
                 <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
                     <?php foreach ($cats as $c):?>
                         <button type="submit" class="dropdown-item" name = "category" value = "<?php echo $c["category"];?>" >
