@@ -39,6 +39,7 @@ if(isset($_POST["save"])){
 	$quantity = $_POST["quantity"];
 
 	$price = $_POST["price"];
+    $category = $_POST["category"];
 
 	$description = $_POST["description"];
 
@@ -52,7 +53,7 @@ if(isset($_POST["save"])){
 
 	if(isset($id)){
 
-		$stmt = $db->prepare("UPDATE Products set name=:name, quantity=:quantity, price=:price, description=:description, modified=:modified, created=:created where id=:id");
+		$stmt = $db->prepare("UPDATE Products set name=:name, quantity=:quantity, price=:price,category=:category, description=:description, modified=:modified, created=:created where id=:id");
 
 		//$stmt = $db->prepare("INSERT INTO Products (name, quantity, price, description, modified, created, user_id) VALUES(:name, :quantity, :br, :min,:max,:nst,:user)");
 
@@ -63,6 +64,7 @@ if(isset($_POST["save"])){
 			":quantity"=>$quantity,
 
 			":price"=>$price,
+            ":category"=>$category,
 
 			":description"=>$description,
 
@@ -139,6 +141,10 @@ if(isset($id)){
 
 	<input type="decimal" min="1" name="price"/>
 
+    <label>Category</label>
+
+    <input name="category" placeholder="Category"/>
+
 	<label>Description</label>
 
 	<input type="text" min="1" name="description"/>
@@ -154,4 +160,3 @@ if(isset($id)){
 
 
 <?php require(__DIR__ . "/../partials/flash.php");
-

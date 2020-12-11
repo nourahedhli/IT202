@@ -35,6 +35,10 @@ if (!has_role("Admin")) {
 
 	<input type="text" min="1" name="description"/>
 
+    <label>Category</label>
+
+    <input type="text" min="1" name="category"/>
+
 	<input type="submit" name="save" value="Create"/>
 
 </form>
@@ -54,7 +58,10 @@ if(isset($_POST["save"])){
 
 	$price = $_POST["price"];
 
+	$category = $_POST["category"];
+
 	$description = $_POST["description"];
+
 
 	$modified = date('Y-m-d H:i:s');
 
@@ -64,7 +71,7 @@ if(isset($_POST["save"])){
 
 	$db = getDB();
 
-	$stmt = $db->prepare("INSERT INTO Products (name, quantity, price, description, modified, created, user_id) VALUES(:name, :quantity, :price, :description, :modified, :created,:user)");
+	$stmt = $db->prepare("INSERT INTO Products (name, quantity, price,category, description, modified, created, user_id) VALUES(:name, :quantity, :price, :category, :description, :modified, :created,:user)");
 
 	$r = $stmt->execute([
 
@@ -73,6 +80,7 @@ if(isset($_POST["save"])){
 		":quantity"=>$quantity,
 
 		":price"=>$price,
+		":category"=>$category,
 
 		":description"=>$description,
 
@@ -103,5 +111,3 @@ if(isset($_POST["save"])){
 ?>
 
 <?php require(__DIR__ . "/../partials/flash.php");
-
-

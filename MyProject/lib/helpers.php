@@ -25,6 +25,20 @@ function get_username() {
     return "";
 }
 
+function calcNextProductCost() {
+    if (is_logged_in()) {
+        $db = getDB();
+        $stmt = $db->prepare("SELECT count(id) as products from Products where user_id = :id");
+        $stmt->execute([":id" => get_user_id()]);
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        if ($result && isset($result["products"])) {
+            $c = (int)$result["products"];
+            $base_cost = 10;
+            return $c * $base_cost; // first is free
+        }
+    }
+    return -1;//-1 will be invalid
+}
 function get_email() {
     if (is_logged_in() && isset($_SESSION["user"]["email"])) {
         return $_SESSION["user"]["email"];
@@ -121,3 +135,4 @@ function calcNextEggCost(){
 	return -1;//-1 will be invalid
 }
 ?>
+
