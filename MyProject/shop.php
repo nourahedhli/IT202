@@ -52,28 +52,42 @@ $cost = calcNextProductCost();
 $category = null;
 $search = null;
 $price = null;
+$query="";
+$dbQuery = "SELECT name, id, price, category, quantity, description, user_id From Products WHERE 1 = 1";
+if (isset($_POST["query"])){
+
+    $query= $_POST["query"];
+}
 
 if (isset($_POST["search"])){
+    echo $_POST["category"];
+    echo $query;
     $cat = $_POST["category"];
-    
-}
-// by category 
+    if ($cat != -1){
+        $dbQuery .= " And category = :cat";
+
+    }
+    if (isset($_POST["sort"]) && $_POST["sort"] == "price"){
+        $sort = "price";
+        $query .= " ORDER BY $sort ASC";
+
+    }
+
+
+    }
+
+
+// by category
 $stmt = $db->prepare("SELECT DISTINCT category From Products");
 $stmt->execute();
 $cats = $stmt->fetchAll(PDO::FETCH_ASSOC);
 $stmt = $db-> prepare("SELECT * FROM Products LIMIT 10");
 $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-if (isset($_POST["search"])){
-    $pri = $_POST["price"];
-    
-}
 // search by prices
-$stmt = $db->prepare("SELECT DISTINCT price From Products");
-$stmt->execute();
-$prices = $stmt->fetchAll(PDO::FETCH_ASSOC);
-$stmt = $db-> prepare("SELECT * FROM Products LIMIT 10");
-$prod = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+
+
 
 ?>
 
@@ -131,7 +145,7 @@ $prod = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     <h1>Shop</h1>
 
- 
+
 
     <form method="POST">
         <select>
@@ -141,8 +155,8 @@ $prod = $stmt->fetchAll(PDO::FETCH_ASSOC);
         <input type="submit" value="Search" name="search"/>
         <?php endforeach; ?>
         </select>
-        
-      
+
+
             <select name="category">
                <?php foreach($cats as $c): ?>
                 <option value="<?php echo $c["category"];?>"
