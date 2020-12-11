@@ -21,7 +21,6 @@ if($r){
         $_SESSION["user"]["balance"] = $balance;
     }
 }
-//pagination stuff
 $page=1;
 $per_page = 10;
 $query = "SELECT count(*) as total FROM Products WHERE quantity > 0 ORDER BY CREATED DESC";
@@ -52,39 +51,72 @@ $cost = calcNextProductCost();
 $category = null;
 $search = null;
 $price = null;
+$results=[];
 $query="";
+$selectedCat='';
 $dbQuery = "SELECT name, id, price, category, quantity, description, user_id From Products WHERE 1 = 1";
 if (isset($_POST["query"])){
 
     $query= $_POST["query"];
 }
 
+$db=getDB();
+$stmt = $db->prepare("SELECT distinct category from Products");
+$r = $stmt->execute();
+if ($r){
+    $cats= $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+} else {
+    flash("There was a problem fetching the results");
+
+}
+
 if (isset($_POST["search"])){
+
     echo $_POST["category"];
     echo $query;
-    $cat = $_POST["category"];
-    if ($cat != -1){
-        $dbQuery .= " And category = :cat";
-
+    $selectedCat = $_POST["category"];
+    if ($selectedCat != -1){
+        $dbQuery .= " AND category = :cat";
+        $param[":cat"] = $selectedCat;
     }
+
+    if ($query != ""){
+
+        $dbQuery .= " AND name like :q";
+        $param[":q"] = $query;
+    }
+    $sort = "default";
     if (isset($_POST["sort"]) && $_POST["sort"] == "price"){
-        $sort = "price";
-        $query .= " ORDER BY $sort ASC";
+        $sort = $_POST["sort"];
+        if ($sort == "price") {
+
+
+            $sort = "price";
+            $query .= " ORDER BY $sort ASC";
+        }
+        else {
+            $sort = "name";
+
+        }
+    }
+    $db=getDB();
+    $stmt = $db->prepare($query);
+    $r = $stmt->execute([":q" => "%$query%",
+        ":cat"=> $selectedCat
+        ]);
+    if ($r) {
+
+        $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    } else {
+
+        flash("There was a problem fetching the results");
+
+    }
 
     }
 
 
-    }
-
-
-// by category
-$stmt = $db->prepare("SELECT DISTINCT category From Products");
-$stmt->execute();
-$cats = $stmt->fetchAll(PDO::FETCH_ASSOC);
-$stmt = $db-> prepare("SELECT * FROM Products LIMIT 10");
-$products = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-// search by prices
 
 
 
@@ -146,35 +178,24 @@ $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <h1>Shop</h1>
 
 
+    <div>
+        <form method="POST" style="float: left; margin-top: 3em; display: inline-flex; margin-left: 2em;" id = "form1">
+            <button style= "margin-left: 2em;"type="submit" name="sort" value="sort"  class="btn btn-primary">Sort by Ascending Price</button>
+            <div class="dropdown">
+                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Categories
+                <button/>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
+                    <?php foreach ($cats as $c):?>
+                        <button type="submit" class="dropdown-item" name = "category" value = "<?php echo $c["category"];?>" >
+                            <?php safer_echo($c["category"] == $category);?>
+                        </button>
+                    <?php endforeach; ?>
+                </div>
+            </div>
+        </form>
+    </div>
 
-    <form method="POST">
-        <select>
-        <?php foreach($prices as $p): ?>
-        <input name="query" placeholder="Search" value="<?php safer_echo(($p["price"] == $price?"selected='selected'":"")); ?>"/>
-
-        <input type="submit" value="Search" name="search"/>
-        <?php endforeach; ?>
-        </select>
-
-
-            <select name="category">
-               <?php foreach($cats as $c): ?>
-                <option value="<?php echo $c["category"];?>"
-                        <?php echo ($c["category"] == $category?"selected='selected'":""); ?>
-                        >
-                        <?php echo $c["category"];?>
-                        </option>
-                        <?php endforeach; ?>
-            </select>
-
-    </form>
-
-<div>
-
-    <?php foreach($products as $p): ?>
-    <dix>Product: <?php echo $p["name"]; ?> </dix>
-    <?php endforeach;?>
-</div>
 
     <div class="container">
 
@@ -202,7 +223,7 @@ $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 <?php endforeach;?>
             </div>
         </div>
-        <?php include(__DIR__ . "/partials/pagination.php"); ?>
+
     </div>
 
     <?php require(__DIR__ . "/partials/flash.php");
