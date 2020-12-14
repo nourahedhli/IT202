@@ -23,13 +23,19 @@ $search = extractData("search");
 $sort = extractData("sort");
 $order = extractData("order");
 $params = [];
+
+flash($category);
+flash($sort);
+flash ($order);
+
 //build and map queries dynamically
 if(isset($category)){
     $pQuery .= " AND category = :cat";
-    $dQuery .= " AND name LIKE :search";
+    $dQuery .= " AND name LIKE :cat";
     $params[":cat"] = $category;
+
 }
-if(isset($search)){
+if(isset($search) && !empty($search) ){
     $pQuery .= " AND name LIKE :search";
     $dQuery .= " AND name LIKE :search";
     $params[":search"] = "%$search%";
@@ -37,7 +43,7 @@ if(isset($search)){
 if(isset($sort) && isset($order)){
     if(in_array($sort,["price","category","name"])
         && in_array($order, ["asc","desc"])){
-        $dQuery .= " ORDERY BY $sort $order";
+        $dQuery .= " ORDER BY $sort $order";
     }
 }
 $offset = ($page-1) * $per_page;
@@ -101,9 +107,15 @@ if ($r){
 <h1>Shop</h1>
 <div>
     <form method="POST" style="float: left; margin-top: 3em; display: inline-flex; margin-left: 2em;" id = "form1">
-       <h4>Search For Products</h4>
+       <h4>Search For Products  </h4>
         <input type="text" name="search" value="<?php echo isset($search)?$search:"";?>"/>
-
+        <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
+            <?php foreach ($cats as $c):?>
+                <button type="submit" class="dropdown-item" name = "category" value = "<?php echo $c["category"];?>" >
+                    <?php safer_echo($c["category"] == $category);?>
+                </button>
+            <?php endforeach; ?>
+        </div>
         <select style="float:left" name="sort">
             <!-- todo add preselect like category options-->
             <option value="" disabled selected>Choose a Filter</option>
@@ -117,6 +129,7 @@ if ($r){
             <option value="asc">Ascending</option>
             <option value="desc">Descending</option>
         </select>
+        <input type="submit" value="Search" />
     </form>
 </div>
 
@@ -163,4 +176,3 @@ if ($r){
 </div>
 
 <?php require(__DIR__ . "/partials/flash.php");
-
