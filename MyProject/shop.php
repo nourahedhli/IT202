@@ -15,7 +15,7 @@ $per_page = 10;
 
 //paginate query
 $pQuery = "SELECT COUNT(*) as total from Products where quantity > 0";
-//data query
+//data queryyy
 $dQuery = "SELECT id,name, price, category, description as total from Products where quantity > 0";
 //refer to function defined above (gets the value from POST or from SESSION)
 $category = extractData("category");
