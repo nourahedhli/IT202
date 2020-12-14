@@ -101,7 +101,7 @@ if ($r){
 <h1>Shop</h1>
 <div>
     <form method="POST" style="float: left; margin-top: 3em; display: inline-flex; margin-left: 2em;" id = "form1">
-       <h3>Search For Products</h3>
+       <h4>Search For Products</h4>
         <input type="text" name="search" value="<?php echo isset($search)?$search:"";?>"/>
 
         <select style="float:left" name="sort">
@@ -163,3 +163,4 @@ if ($r){
 </div>
 
 <?php require(__DIR__ . "/partials/flash.php");
+
