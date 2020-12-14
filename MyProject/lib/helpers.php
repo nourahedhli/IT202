@@ -25,26 +25,27 @@ function get_username() {
     return "";
 }
 
-function calcNextProductCost() {
-    if (is_logged_in()) {
-        $db = getDB();
-        $stmt = $db->prepare("SELECT count(id) as products from Products where user_id = :id");
-        $stmt->execute([":id" => get_user_id()]);
-        $result = $stmt->fetch(PDO::FETCH_ASSOC);
-        if ($result && isset($result["products"])) {
-            $c = (int)$result["products"];
-            $base_cost = 10;
-            return $c * $base_cost; // first is free
-        }
-    }
-    return -1;//-1 will be invalid
-}
 function get_email() {
     if (is_logged_in() && isset($_SESSION["user"]["email"])) {
         return $_SESSION["user"]["email"];
     }
     return "";
 }
+
+function extractData($key){
+    if(isset($_POST[$key])){
+        $output = $_POST[$key];
+        $_SESSION[$key] = $output;
+    }
+    else if (isset($_SESSION[$key])){
+        $output = $_SESSION[$key];
+    }
+    else{
+        $output = null;
+    }
+    return $output;
+}
+
 
 function get_user_id() {
     if (is_logged_in() && isset($_SESSION["user"]["id"])) {
@@ -84,28 +85,7 @@ function getMessages() {
 
 //end flash
 
-function getState($n) {
-    switch ($n) {
-        case 0:
-            echo "Stasis";
-            break;
-        case 1:
-            echo "Incubating";
-            break;
-        case 2:
-            echo "Hatching";
-            break;
-        case 3:
-            echo "Hatched";
-            break;
-        case 4:
-            echo "Expired";
-            break;
-        default:
-            echo "Unsupported state: " . safer_echo($n);
-            break;
-    }
-}
+
 
 function getURL($path) {
     if (substr($path, 0, 1) == "/") {
@@ -120,19 +100,19 @@ function getBalance() {
     }
     return 0;
 }
-function calcNextEggCost(){
-	if(is_logged_in()){
-		$db = getDB();
-		$stmt = $db->prepare("SELECT count(id) as eggs from F20_Eggs where user_id = :id");
-		$stmt->execute([":id"=>get_user_id()]);
-		$result = $stmt->fetch(PDO::FETCH_ASSOC);
-		if($result && isset($result["eggs"])){
-			$c = (int)$result["eggs"];
-			$base_cost = 10;
-			return $c * $base_cost; // first is free
-		}
-	}
-	return -1;//-1 will be invalid
+function calcNextProductCost(){
+    if(is_logged_in()){
+        $db = getDB();
+        $stmt = $db->prepare("SELECT count(id) as eggs from Products where user_id = :id");
+        $stmt->execute([":id"=>get_user_id()]);
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        if($result && isset($result["products"])){
+            $c = (int)$result["products"];
+            $base_cost = 10;
+            return $c * $base_cost; // first is free
+        }
+    }
+    return -1;//-1 will be invalid
 }
 ?>
 
