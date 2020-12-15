@@ -105,7 +105,7 @@ if ($valid == true && $payment != -1) {
     ]);
 
     if (!$r) {
-
+        flash(var_export($stmt->errorInfo(), true));
         echo("Something is wrong with the order ");
 
     }
