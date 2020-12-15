@@ -78,8 +78,8 @@ foreach($products as $product):
 if($product["CartQ"]>$product["ProductQ"]){
     flash("Sorry, there are only ".$product["ProductQ"]." ".$product["name"]." left ");
     $valid = false;
-}elseif($product["inventory"]==0){
-    flash("Sorry! no more of, ".$item["name"]." item you have to update your cart.");
+}elseif($product["ProductQ"]==0){
+    flash("Sorry! no more of, ".$product["name"]." item you have to update your cart.");
     $valid = false;
 }
 endforeach;
@@ -94,13 +94,13 @@ endforeach;
 if ($valid == true && $payment != -1) {
 
     $db = getDB();
-    $stmt = $db->prepare(("INSERT INTO Orders user_id,total_price,address,created,payment_method) VALUES (:user,:total,:add,:created,:pay)"));
+    $stmt = $db->prepare(("INSERT INTO Orders (user_id,total_price,address,created,payment_method) VALUES (:user,:total,:add,:created,:pay)"));
     $r = $stmt->execute([
-        ":user" => $id,
-        ":total" => $price,
-        ":add" => $address,
-        ":created" => $created,
-        ":pay" => $payment
+        ":user"=>$id,
+        ":total"=>$price,
+        ":add"=>$address,
+        ":created"=>$created,
+        ":pay"=>$payment
 
 
     ]);
@@ -124,7 +124,7 @@ if ($valid == true && $payment != -1) {
     $db = getDB();
     $stmt = $db->prepare("SELECT product_id, quantity, price , created From Cart Join Products on Cart.product_id = Products.id JOIN Users on Cart.user_id = Users.id where Cart.user_id=:id ");
     $r = $stmt->execute([":id" => $id]);
-    $OrderItems = $stmt->fetch(PDO::FETCH_ASSOC);
+    $OrderItems = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     foreach ($OrderItems as $item) {
         $db = getDB();
