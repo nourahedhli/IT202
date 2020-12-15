@@ -31,7 +31,7 @@ flash ($order);
 //build and map queries dynamically
 if(isset($category)){
     $pQuery .= " AND category = :cat";
-    $dQuery .= " AND name LIKE :cat";
+    $dQuery .= " AND category = :cat";
     $params[":cat"] = $category;
 
 }
@@ -109,14 +109,16 @@ if ($r){
     <form method="POST" style="float: left; margin-top: 3em; display: inline-flex; margin-left: 2em;" id = "form1">
        <h4>Search For Products  </h4>
         <input type="text" name="search" value="<?php echo isset($search)?$search:"";?>"/>
+        <select name="category">
         <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
             <?php foreach ($cats as $c):?>
                 <button type="submit" class="dropdown-item" name = "category" value = "<?php echo $c["category"];?>" >
-                    <?php safer_echo($c["category"] == $category);?>
+                    <?php safer_echo($c["category"] == $category? "selected='selected'":"");?>
                 </button>
             <?php endforeach; ?>
+        </select>
         </div>
-        <select style="float:left" name="sort">
+        <select  name="sort">
             <!-- todo add preselect like category options-->
             <option value="" disabled selected>Choose a Filter</option>
             <option value="category">Category</option>
