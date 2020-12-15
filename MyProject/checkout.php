@@ -91,70 +91,73 @@ endforeach;
 
 
 
-if ($valid == true && $payment != -1)
+if ($valid == true && $payment != -1) {
 
- $db = getDB();
-$stmt = $db->prepare(("INSERT INTO Orders user_id,total_price,address,created,payment_method) VALUES (:user,:total,:add,:created,:pay)"));
-$r= $stmt->execute([
-    ":user" => $id,
-    ":total" => $price,
-    ":add" => $address,
-    "created" => $created,
-    ":pay" => $payment
+    $db = getDB();
+    $stmt = $db->prepare(("INSERT INTO Orders user_id,total_price,address,created,payment_method) VALUES (:user,:total,:add,:created,:pay)"));
+    $r = $stmt->execute([
+        ":user" => $id,
+        ":total" => $price,
+        ":add" => $address,
+        ":created" => $created,
+        ":pay" => $payment
 
 
-]);
+    ]);
 
-if (!$r){
+    if (!$r) {
 
-echo ("Something is wrong with the order ");
+        echo("Something is wrong with the order ");
 
-}
-
+    }
+    $id = get_user_id();
 //Get last Order ID from Orders table
-$db = getDB();
-$stmt = $db->prepare("SELECT id from Orders WHERE user_id = :id ORDER by created DESC " );
-$r= $stmt->execute([":id" =>$id]);
-$Last_order = $stmt->fetch(PDO::FETCH_ASSOC);
+    $db = getDB();
+    $stmt = $db->prepare("SELECT id from Orders WHERE user_id = :id ORDER by created DESC ");
+    $r = $stmt->execute([":id" => $id]);
+    flash(var_export($stmt->errorInfo(), true));
+    $Last_order = $stmt->fetch(PDO::FETCH_ASSOC);
 
 //Copy the cart details into the OrderItems tables with the Order ID from the previous step
-$order_id = $Last_order["id"];
-$db = getDB();
-$stmt = $db->prepare("SELECT product_id, quantity, price , created From Cart Join Products on Cart.product_id = Products.id JOIN Users on Cart.user_id = Users.id where Cart.user_id=:id " );
-$r= $stmt->execute([":id" =>$id]);
-$OrderItems = $stmt->fetch(PDO::FETCH_ASSOC);
+    $order_id = $Last_order["id"];
+    $id = get_user_id();
+    $db = getDB();
+    $stmt = $db->prepare("SELECT product_id, quantity, price , created From Cart Join Products on Cart.product_id = Products.id JOIN Users on Cart.user_id = Users.id where Cart.user_id=:id ");
+    $r = $stmt->execute([":id" => $id]);
+    $OrderItems = $stmt->fetch(PDO::FETCH_ASSOC);
 
-foreach ( $OrderItems as $item){
- $db = getDB();
- $product_id = $item["product_id"];
- $item_quantity = $item["quantity"];
- $price = $item["price"];
- $created = $item["created"];
- $stmt = $db-> prepare( "INSERT INTO OrderItems order_id, product_id, quantity, price, created)VALUES (:order_id, :pid,:q,:p,:cr)");
- $r= $stmt->execute([
-     ":order_id" =>$order_id,
-    ":pid" => $product_id,
-    ":q"=> $item_quantity,
-    ":p" => $price,
-     ":cr" => $created
+    foreach ($OrderItems as $item) {
+        $db = getDB();
+        $product_id = $item["product_id"];
+        $item_quantity = $item["quantity"];
+        $price = $item["price"];
+        $created = $item["created"];
+        $stmt = $db->prepare("INSERT INTO OrderItems order_id, product_id, quantity, price, created)VALUES (:order_id, :pid,:q,:p,:cr)");
+        $r = $stmt->execute([
+            ":order_id" => $order_id,
+            ":pid" => $product_id,
+            ":q" => $item_quantity,
+            ":p" => $price,
+            ":cr" => $created
 
- ]);
+        ]);
 //Update the Products table Quantity for each item to deduct the Ordered Quantity
-    $db = getDB();
-    $stmt = $db->prepare("UPDATE Products set quantity= quantity-$item_quantity where id=:pid");
-    $r = $stmt->execute([ ":pid"=>$product_id, ":q"=>$item_quantity ]);
+        $db = getDB();
+        $stmt = $db->prepare("UPDATE Products set quantity= quantity-$item_quantity where id=:pid");
+        $r = $stmt->execute([":pid" => $product_id, ":q" => $item_quantity]);
 
-    //Clear out the user’s cart after successful order
+        //Clear out the user’s cart after successful order
 
-    $userID = get_user_id();
-    $db = getDB();
-    $stmt = $db->prepare("DELETE FROM Cart where user_id=:id");
-    $r = $stmt->execute([":id" => $userID]);
+        $userID = get_user_id();
+        $db = getDB();
+        $stmt = $db->prepare("DELETE FROM Cart where user_id=:id");
+        $r = $stmt->execute([":id" => $userID]);
 
-    //Redirect user to Order Confirmation Page
-    flash("Thank you. Now you will see your confirmation info");
-    die(header("Location: orders.php"));
+        //Redirect user to Order Confirmation Page
+        flash("Thank you. Now you will see your confirmation info");
+        die(header("Location: orders.php"));
 
+    }
 }
 
 
