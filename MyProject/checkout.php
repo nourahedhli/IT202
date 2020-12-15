@@ -8,10 +8,10 @@ if (!is_logged_in()) {
     die(header("Location: login.php"));
 }
 $user_id = get_user_id();
-
+//getting the items from the cart
 ?>
 
-// getting the items from the cart
+
 <?php
 $userID = get_user_id();
 $db = getDB();
@@ -43,11 +43,11 @@ $results= $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 </div>
 
-// shipping information
+
 
 
 <?php
-
+// shipping information
 // we need the id address and total also the payment method
 //Calculate Cart Items
 //Verify desired product and desired quantity are available in the Products table
@@ -167,10 +167,10 @@ foreach ( $OrderItems as $item){
 
 
 
-
+//Make entry into Orders table
 
 ?>
-    //Make entry into Orders table
+
 
     <form method="POST">
         <h4>Fill In the Form </h4>
@@ -203,7 +203,7 @@ foreach ( $OrderItems as $item){
         <br>
         <input name="zip" type="text" pattern="[0-9]{5}" required/>
         <br>
-        
+
         <button id="placeOrder" type="submit" name="submit" value="Submit">Place Order</button>
     </form>
 <?php require(__DIR__ . "/partials/flash.php");
