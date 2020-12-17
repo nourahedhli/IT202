@@ -14,7 +14,7 @@ $user_id = get_user_id();
 <?php
 $userID = get_user_id();
 $db = getDB();
-$stmt = $db->prepare("SELECT Products.name,c.product_id, c.id,c.quantity,c.price as product FROM Cart as c JOIN Users on c.user_id = Users.id LEFT JOIN Products  on Products.id = c.product_id where c.user_id = :id ORDER by product");
+$stmt = $db->prepare("SELECT Products.name,c.product_id, c.id,c.quantity as Quantity ,c.price as product FROM Cart as c JOIN Users on c.user_id = Users.id LEFT JOIN Products  on Products.id = c.product_id where c.user_id = :id ORDER by product");
 $r= $stmt->execute([":id" => $userID]);
 $results= $stmt->fetchAll(PDO::FETCH_ASSOC);
 flash("results not working".var_export($stmt->errorInfo(), true));
@@ -24,17 +24,20 @@ flash("results not working".var_export($stmt->errorInfo(), true));
 
     <?php
     $totalItems=0;
-    foreach ($results as $item):
+    foreach ($results as $product):
     ?>
-    <div> Product: <?php echo ($item["product"]) ?>
+    <div> Product: <?php echo ($product["product"]) ?>
 
 
     </div>
-    <div> Product Quantity: <?php echo ($item["quantity"]) ?> </div>
-    <div> Product's Price: <?php echo ($item["price"]) ?> </div>
+    <div> Product Quantity: <?php echo ($product["Quantity"] ) ?> </div>
+    <div> Product's Price: <?php echo ($product["product"]) ?> </div>
+
+
+
 
     <div> Order Total: <?php
-        $xTotal= ((float)($item["price"] * (int)$item["quantity"]));
+        $xTotal= ((float)($product["product"]) * (int)($product["Quantity"]));
         echo ($xTotal);
     $totalItems = $totalItems + $xTotal ;
     ?> </div>
@@ -53,7 +56,7 @@ flash("results not working".var_export($stmt->errorInfo(), true));
 // Cart table has the product_id quantity user_id price and created
 
 if(isset($_POST["submit"])) {
-    $address = null;
+    $add = null;
     $payment = null;
     $price = $totalItems;
     $created = date('Y-m-d H:i:s');
@@ -65,6 +68,10 @@ if(isset($_POST["submit"])) {
             flash("Its not working you have to do a valid payment method.");
         }
     }
+    // for the address
+$add = $_POST["adr"] . ", " . $_POST["city"] . ", " .$_POST["state"]."  ".$_POST["zip"];
+
+
 
 $db = getDB();
 $stmt = $db->prepare("SELECT Cart.product_id,Cart.quantity as CartQ AND Products.name,Products.quantity as ProductQ FROM Cart Join Products on Cart.product_id = Products.id JOIN Users on Cart.user_id = Users.id where Cart.user_id=:id");
@@ -101,9 +108,10 @@ if ($valid == true && $payment != -1) {
     $r = $stmt->execute([
         ":user"=>$id,
         ":total"=>$price,
-        ":add"=>$address,
+        ":add"=>$add,
         ":created"=>$created,
         ":pay"=>$payment
+
 
 
     ]);
@@ -191,7 +199,7 @@ if ($valid == true && $payment != -1) {
         <br>
         <label>Street Address:</label>
         <br>
-        <input name="add" type="text" required/>
+        <input name="adr" type="text" required/>
         <br>
         <label>City:</label>
         <br>
