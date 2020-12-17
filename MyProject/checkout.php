@@ -114,7 +114,7 @@ if ($valid == true && $payment != -1) {
     $db = getDB();
     $stmt = $db->prepare("SELECT id from Orders WHERE user_id = :id ORDER by created DESC ");
     $r = $stmt->execute([":id" => $id]);
-    flash(var_export($stmt->errorInfo(), true));
+    flash("its not working here", var_export($stmt->errorInfo(), true));
     $Last_order = $stmt->fetch(PDO::FETCH_ASSOC);
 
 //Copy the cart details into the OrderItems tables with the Order ID from the previous step
