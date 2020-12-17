@@ -14,7 +14,7 @@ $user_id = get_user_id();
 <?php
 $userID = get_user_id();
 $db = getDB();
-$stmt = $db->prepare("SELECT Product.name,c.product_id, c.id,c.quantity,c.price as product FROM Cart as c JOIN Users on c.user_id = Users.id LEFT JOIN Products  on Product.id = c.product_id where c.user_id = :id ORDER by product");
+$stmt = $db->prepare("SELECT Products.name,c.product_id, c.id,c.quantity,c.price as product FROM Cart as c JOIN Users on c.user_id = Users.id LEFT JOIN Products  on Products.id = c.product_id where c.user_id = :id ORDER by product");
 $r= $stmt->execute([":id" => $userID]);
 $results= $stmt->fetchAll(PDO::FETCH_ASSOC);
 flash("results not working".var_export($stmt->errorInfo(), true));
