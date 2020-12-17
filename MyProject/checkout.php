@@ -17,7 +17,7 @@ $db = getDB();
 $stmt = $db->prepare("SELECT Product.name,c.product_id, c.id,c.quantity,c.price as product FROM Cart as c JOIN Users on c.user_id = Users.id LEFT JOIN Products  on Product.id = c.product_id where c.user_id = :id ORDER by product");
 $r= $stmt->execute([":id" => $userID]);
 $results= $stmt->fetchAll(PDO::FETCH_ASSOC);
-
+flash("results not working", var_export($stmt->errorInfo(), true));
 ?>
 
 <div class="Items">
@@ -34,7 +34,7 @@ $results= $stmt->fetchAll(PDO::FETCH_ASSOC);
     <div> Product's Price: <?php echo ($item["price"]) ?> </div>
 
     <div> Order Total: <?php
-        $xTotal= ($item["price"] * $item["quantity"]);
+        $xTotal= ((float)($item["price"] * (int)$item["quantity"]));
         echo ($xTotal);
     $totalItems = $totalItems + $xTotal ;
     ?> </div>
@@ -91,6 +91,10 @@ endforeach;
 
 
 if ($valid == true && $payment != -1) {
+    $db = getDB();
+    $stmt = $db->prepare("SELECT product_id, quantity, price , created From Cart Join Products on Cart.product_id = Products.id JOIN Users on Cart.user_id = Users.id where Cart.user_id=:id ");
+    $r = $stmt->execute([":id" => $id]);
+    $OrderItems = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     $db = getDB();
     $stmt = $db->prepare("INSERT INTO Orders (user_id,total_price,address,created,payment_method) VALUES (:user,:total,:add,:created,:pay)");
@@ -120,10 +124,6 @@ if ($valid == true && $payment != -1) {
 //Copy the cart details into the OrderItems tables with the Order ID from the previous step
     $order_id = $Last_order["id"];
     $id = get_user_id();
-    $db = getDB();
-    $stmt = $db->prepare("SELECT product_id, quantity, price , created From Cart Join Products on Cart.product_id = Products.id JOIN Users on Cart.user_id = Users.id where Cart.user_id=:id ");
-    $r = $stmt->execute([":id" => $id]);
-    $OrderItems = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     foreach ($OrderItems as $item) {
         $db = getDB();
