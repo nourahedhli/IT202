@@ -93,7 +93,7 @@ endforeach;
 if ($valid == true && $payment != -1) {
 
     $db = getDB();
-    $stmt = $db->prepare(("INSERT INTO Orders (user_id,total_price,address,created,payment_method) VALUES (:user,:total,:add,:created,:pay)"));
+    $stmt = $db->prepare("INSERT INTO Orders (user_id,total_price,address,created,payment_method) VALUES (:user,:total,:add,:created,:pay)");
     $r = $stmt->execute([
         ":user"=>$id,
         ":total"=>$price,
@@ -191,7 +191,7 @@ if ($valid == true && $payment != -1) {
         <br>
         <label>Street Address:</label>
         <br>
-        <input name="adr" type="text" required/>
+        <input name="add" type="text" required/>
         <br>
         <label>City:</label>
         <br>
