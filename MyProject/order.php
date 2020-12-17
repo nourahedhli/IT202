@@ -112,7 +112,7 @@ if (!has_role("Admin")){
                 </div>
             </div>
         <?php endforeach; ?>
-        <div><b>Total Revenue: $<?php safer_echo($TotalPrice);?></b></div>
+        <div><b>Total : <?php safer_echo($TotalPrice);?></b></div>
     <?php endif; ?>
     <div>
         <div><br></div>

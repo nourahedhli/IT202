@@ -213,9 +213,19 @@ if ($valid == true && $payment != -1) {
         <br>
         <input name="zip" type="text" pattern="[0-9]{5}" required/>
         <br>
+<br>
+        <br>
+        
+        <button id="placeOrder" type="submit" name="submit" value="Submit" ">Place Order</button>
 
-        <button id="placeOrder" type="submit" name="submit" value="Submit">Place Order</button>
+        <br>
+        <br>
+        <br>
+            <a type="button" href="order.php">Confirmation</a>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
     </form>
 <?php require(__DIR__ . "/partials/flash.php");
-
-
