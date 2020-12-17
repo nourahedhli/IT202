@@ -17,7 +17,7 @@ $db = getDB();
 $stmt = $db->prepare("SELECT Product.name,c.product_id, c.id,c.quantity,c.price as product FROM Cart as c JOIN Users on c.user_id = Users.id LEFT JOIN Products  on Product.id = c.product_id where c.user_id = :id ORDER by product");
 $r= $stmt->execute([":id" => $userID]);
 $results= $stmt->fetchAll(PDO::FETCH_ASSOC);
-flash("results not working", var_export($stmt->errorInfo(), true));
+flash("results not working".var_export($stmt->errorInfo(). true));
 ?>
 
 <div class="Items">
@@ -118,7 +118,7 @@ if ($valid == true && $payment != -1) {
     $db = getDB();
     $stmt = $db->prepare("SELECT id from Orders WHERE user_id = :id ORDER by created DESC ");
     $r = $stmt->execute([":id" => $id]);
-    flash("its not working here", var_export($stmt->errorInfo(), true));
+    flash("its not working here". var_export($stmt->errorInfo(). true));
     $Last_order = $stmt->fetch(PDO::FETCH_ASSOC);
 
 //Copy the cart details into the OrderItems tables with the Order ID from the previous step
