@@ -24,16 +24,10 @@ if (isset($id)) {
 //check to see if the user purchased the product to allow them to rate it
 $userID = get_user_id();
 $db = getDB();
-$stmt = $db->prepare("SELECT Orders.id,OrderItems.product_id FROM Orders JOIN OrderItems where Orders.user_id = :id AND OrderItems.order_id = Orders.id");
-$r = $stmt->execute([":id"=>$userID]);
+$stmt = $db->prepare("SELECT Orders.id,OrderItems.product_id FROM Orders JOIN OrderItems where Orders.user_id = :id AND OrderItems.order_id = Orders.id AND OrderItems.product_id = :product_id ");
+$r = $stmt->execute([":id"=>$userID,":product_id"=>$_GET["id"]]);
 $orderItems = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-$OR = false;
-foreach($orderItems as $item):
-    if($item["product_id"]==$_GET["id"]){
-        $OR = true;
-    }
-endforeach;
 ?>
 <?php
 $page = 1;
@@ -87,11 +81,11 @@ if($ratings){
                 <div>Quantity: <?php safer_echo($result["quantity"]); ?></div>
                 <div>Category: <?php safer_echo($result["category"]); ?></div>
                 <div>Owner ID: <?php safer_echo($result["username"]); ?></div>
-               
+
             </div>
         </div>
 
-      
+
     </div>
     <br><br>
 <?php else: ?>
@@ -141,7 +135,7 @@ if(isset($_POST["rate"])){
 }
 ?>
 
-<?php if($OR):?>
+<?php if($orderItems && count($orderItems) > 0):?>
     <br>
     <h3>Rate This Product</h3>
     <div>
