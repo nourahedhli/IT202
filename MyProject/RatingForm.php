@@ -78,28 +78,26 @@ if($ratings){
     <div class="card">
         <div class="card-title">
             <br>
-            <div><h1><u><?php safer_echo($result["name"]); ?> </u></h1></div>
+            <div><h3><?php safer_echo($result["name"]); ?> </h3></div>
         </div>
         <div class="card-body">
             <div>
-                <p>Product Information:</p>
+                <p>Item Information:</p>
                 <div>Price: $<?php safer_echo($result["price"]); ?></div>
-                <div>Units Available: <?php safer_echo($result["quantity"]); ?></div>
+                <div>Quantity: <?php safer_echo($result["quantity"]); ?></div>
                 <div>Category: <?php safer_echo($result["category"]); ?></div>
-                <div>Seller ID: <?php safer_echo($result["username"]); ?></div>
-                <div>
-                    <a type="button" href="profile.php?id=<?php safer_echo($result["uid"]); ?>">View Profile</a>
-                </div>
+                <div>Owner ID: <?php safer_echo($result["username"]); ?></div>
+               
             </div>
         </div>
-        <br>
-        <div>Description: <?php safer_echo($result["description"]); ?></div>
+
+      
     </div>
     <br><br>
 <?php else: ?>
     <p>Error looking up id...</p>
 <?php endif; ?>
-    
+
 <?php
 if (isset($_POST["save"])) {
     $id = $_GET["id"];
