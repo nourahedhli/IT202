@@ -138,7 +138,8 @@ if ($r){
 <div class="container">
     <div class="row">
         <div class="card-deck">
-            <?php foreach($items as $item):?>
+            <?php foreach($items as $item):
+                //<?php echo $item["description"];?>
                 <div class="col-auto mb-3">
                     <div class="card" style="width: 18rem;">
                         <div class="card-body">
@@ -147,7 +148,7 @@ if ($r){
                             </div>
                             <div class="card-text">
                                 Product Description:
-                                <?php echo $item["description"];?>
+
                             </div>
 
                             <div class="card-footer">

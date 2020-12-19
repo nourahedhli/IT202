@@ -48,7 +48,7 @@ $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
                         Quantity
                     </div>
                     <div class="col">
-                        Subtotal
+                        Total
                     </div>
                     <div class="col">
                         Actions
@@ -76,7 +76,7 @@ $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
                     </div>
                     <div class="col">
                         <?php echo $r["sub"] ;
-                        $cartTotal+=$r["sub"];
+                        $cartTotal+=(float)$r["sub"];;
                         ;?>
                     </div>
                     <div class="col">
