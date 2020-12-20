@@ -80,16 +80,16 @@ $products= $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 
 $valid = true;
-foreach($products as $product):
-if($product["CartQ"]>$product["ProductQ"]){
-    flash("Sorry, there are only ".$product["ProductQ"]." ".$product["name"]." left ");
-    $valid = false;
-}elseif($product["ProductQ"]==0){
-    flash("Sorry! no more of, ".$product["name"]." item you have to update your cart.");
-    $valid = false;
-}
-endforeach;
+foreach($products as $product){
+    if ($product["CartQ"] > $product["ProductQ"]) {
+        flash("Sorry, there are only " . $product["ProductQ"] . " " . $product["name"] . " left ");
+        $valid = false;
+    } elseif ($product["ProductQ"] == 0) {
+        flash("Sorry! no more of, " . $product["name"] . " item you have to update your cart.");
+        $valid = false;
+    }
 
+}
 
 
 
@@ -168,10 +168,10 @@ if ($valid == true && $payment != -1) {
     }
         //Redirect user to Order Confirmation Page
         flash("Thank you. Now you will see your confirmation info");
-        
 
 
-}
+
+
 
 
 
@@ -222,7 +222,7 @@ if ($valid == true && $payment != -1) {
 <br>
         <br>
 
-        <button id="placeOrder" type="submit" name="submit" value="Submit" ">Place Order</button>
+        <input id="placeOrder" type="submit" name="submit" value="Submit" />
 
         <br>
         <br>
