@@ -69,7 +69,7 @@ if(isset($_POST["submit"])) {
         }
     }
     // for the address
-$addr = $_POST["adr"] . ", " . $_POST["city"] . ", " .$_POST["state"]."  ".$_POST["zip"];
+$add = $_POST["adr"] . ", " . $_POST["city"] . ", " .$_POST["state"]."  ".$_POST["zip"];
 
 
 
@@ -110,12 +110,12 @@ if ($valid == true && $payment != -1) {
 
 
         $db = getDB();
-    $stmt = $db->prepare("INSERT INTO Orders (user_id,total_price,address,created,payment_method) VALUES (:user_id,:total,:addr,:created,:pay)");
+    $stmt = $db->prepare("INSERT INTO Orders (user_id,total_price,address,payment_method) VALUES (:user,:total,:add,:pay)");
     $r = $stmt->execute([
-        ":user_id"=>$id,
+        ":user"=>$id,
         ":total"=>$price,
-        ":addr"=>$add,
-        ":created"=>$created,
+        ":add"=>$add,
+
         ":pay"=>$payment,
 
 
@@ -130,14 +130,8 @@ if ($valid == true && $payment != -1) {
     }
     $id = get_user_id();
 //Get last Order ID from Orders table
-    $db = getDB();
-    $stmt = $db->prepare("SELECT id from Orders WHERE user_id = :id ORDER by created DESC ");
-    $r = $stmt->execute([":id" => $id]);
-    flash("its not working here". var_export($stmt->errorInfo(), true));
-    $Last_order = $stmt->fetch(PDO::FETCH_ASSOC);
 
-//Copy the cart details into the OrderItems tables with the Order ID from the previous step
-    $order_id = $Last_order["id"];
+    $order_id = $db->lastInsertId();
     $id = get_user_id();
 
     foreach ($OrderItems as $item) {
