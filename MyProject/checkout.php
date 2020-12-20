@@ -149,7 +149,7 @@ if ($valid == true && $payment != -1) {
 
 
         ]);
-        flash("for order item table",var_export($stmt->errorInfo(), true));
+        flash("for orderItems table".var_export($stmt->errorInfo(), true));
 
 
 
@@ -157,19 +157,20 @@ if ($valid == true && $payment != -1) {
         $db = getDB();
         $stmt = $db->prepare("UPDATE Products set quantity= quantity-$item_quantity where id=:pid");
         $r = $stmt->execute([":pid" => $product_id, ":q" => $item_quantity]);
-
+        flash("for Updating Products Table table".var_export($stmt->errorInfo(), true));
         //Clear out the user’s cart after successful order
 
         $userID = get_user_id();
         $db = getDB();
         $stmt = $db->prepare("DELETE FROM Cart where user_id=:id");
         $r = $stmt->execute([":id" => $userID]);
-
+        flash("for Deleting from Cart".var_export($stmt->errorInfo(), true));
+    }
         //Redirect user to Order Confirmation Page
         flash("Thank you. Now you will see your confirmation info");
-        die(header("Location: orders.php"));
+        
 
-    }
+
 }
 
 
