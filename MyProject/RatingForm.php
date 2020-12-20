@@ -24,9 +24,11 @@ if (isset($id)) {
 //check to see if the user purchased the product to allow them to rate it
 $userID = get_user_id();
 $db = getDB();
-$stmt = $db->prepare("SELECT Orders.id,OrderItems.product_id FROM Orders JOIN OrderItems where Orders.user_id = :id AND OrderItems.order_id = Orders.id AND OrderItems.product_id = :product_id ");
+$stmt = $db->prepare("SELECT Orders.id,OrderItems.product_id FROM Orders JOIN OrderItems ON Orders.id = OrderItems.order_id  where Orders.user_id =:id AND OrderItems.order_id = Orders.id AND OrderItems.product_id = :product_id ");
 $r = $stmt->execute([":id"=>$userID,":product_id"=>$_GET["id"]]);
+flash(var_export($stmt->errorInfo(), true));
 $orderItems = $stmt->fetchAll(PDO::FETCH_ASSOC);
+flash(var_export($orderItems, true));
 
 ?>
 <?php
