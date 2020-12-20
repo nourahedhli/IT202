@@ -26,12 +26,12 @@ flash("results not working".var_export($stmt->errorInfo(), true));
     $totalItems=0;
     foreach ($results as $product):
     ?>
-    <div> Product: <?php echo ($product["product"]) ?>
+    <div> Product: <?php echo ($product["product"]); ?>
 
 
     </div>
-    <div> Product Quantity: <?php echo ($product["Quantity"] ) ?> </div>
-    <div> Product's Price: <?php echo ($product["product"]) ?> </div>
+    <div> Product Quantity: <?php echo ($product["Quantity"] ) ;?> </div>
+    <div> Product's Price: <?php echo ($product["product"]) ;?> </div>
 
 
 
@@ -116,12 +116,12 @@ if ($valid == true && $payment != -1) {
         ":total"=>$price,
         ":add"=>$add,
 
-        ":pay"=>$payment,
+        ":pay"=>$payment
 
 
 
     ]);
-    flash("for order table",var_export($stmt->errorInfo(), true));
+    flash("for order table".var_export($stmt->errorInfo(), true));
 
     if (!$r) {
         flash(var_export($stmt->errorInfo(), true));
@@ -140,12 +140,12 @@ if ($valid == true && $payment != -1) {
         $item_quantity = $item["quantity"];
         $price = $item["price"];
 
-        $stmt = $db->prepare("INSERT INTO OrderItems order_id, product_id, quantity, price)VALUES (:order_id, :pid,:q,:p)");
+        $stmt = $db->prepare("INSERT INTO OrderItems (order_id, product_id, quantity, price)VALUES (:order_id, :pid,:q,:p)");
         $r = $stmt->execute([
             ":order_id" => $order_id,
             ":pid" => $product_id,
             ":q" => $item_quantity,
-            ":p" => $price,
+            ":p" => $price
 
 
         ]);
@@ -155,7 +155,7 @@ if ($valid == true && $payment != -1) {
 
 //Update the Products table Quantity for each item to deduct the Ordered Quantity
         $db = getDB();
-        $stmt = $db->prepare("UPDATE Products set quantity= quantity-$item_quantity where id=:pid");
+        $stmt = $db->prepare("UPDATE Products set quantity= quantity - :q where id=:pid");
         $r = $stmt->execute([":pid" => $product_id, ":q" => $item_quantity]);
         flash("for Updating Products Table table".var_export($stmt->errorInfo(), true));
         //Clear out the user’s cart after successful order
@@ -168,12 +168,6 @@ if ($valid == true && $payment != -1) {
     }
         //Redirect user to Order Confirmation Page
         flash("Thank you. Now you will see your confirmation info");
-
-
-
-
-
-
 
 
 
