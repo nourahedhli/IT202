@@ -69,7 +69,7 @@ if(isset($_POST["submit"])) {
         }
     }
     // for the address
-$add = $_POST["adr"] . ", " . $_POST["city"] . ", " .$_POST["state"]."  ".$_POST["zip"];
+$addr = $_POST["adr"] . ", " . $_POST["city"] . ", " .$_POST["state"]."  ".$_POST["zip"];
 
 
 
@@ -103,18 +103,25 @@ if ($valid == true && $payment != -1) {
     $r = $stmt->execute([":id" => $id]);
     $OrderItems = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-    $db = getDB();
-    $stmt = $db->prepare("INSERT INTO Orders (user_id,total_price,address,created,payment_method) VALUES (:user,:total,:add,:created,:pay)");
+
+
+
+
+
+
+        $db = getDB();
+    $stmt = $db->prepare("INSERT INTO Orders (user_id,total_price,address,created,payment_method) VALUES (:user_id,:total,:addr,:created,:pay)");
     $r = $stmt->execute([
-        ":user"=>$id,
+        ":user_id"=>$id,
         ":total"=>$price,
-        ":add"=>$add,
+        ":addr"=>$add,
         ":created"=>$created,
-        ":pay"=>$payment
+        ":pay"=>$payment,
 
 
 
     ]);
+    flash("for order table",var_export($stmt->errorInfo(), true));
 
     if (!$r) {
         flash(var_export($stmt->errorInfo(), true));
@@ -138,16 +145,20 @@ if ($valid == true && $payment != -1) {
         $product_id = $item["product_id"];
         $item_quantity = $item["quantity"];
         $price = $item["price"];
-        $created = $item["created"];
-        $stmt = $db->prepare("INSERT INTO OrderItems order_id, product_id, quantity, price, created)VALUES (:order_id, :pid,:q,:p,:cr)");
+
+        $stmt = $db->prepare("INSERT INTO OrderItems order_id, product_id, quantity, price)VALUES (:order_id, :pid,:q,:p)");
         $r = $stmt->execute([
             ":order_id" => $order_id,
             ":pid" => $product_id,
             ":q" => $item_quantity,
             ":p" => $price,
-            ":cr" => $created
+
 
         ]);
+        flash("for order item table",var_export($stmt->errorInfo(), true));
+
+
+
 //Update the Products table Quantity for each item to deduct the Ordered Quantity
         $db = getDB();
         $stmt = $db->prepare("UPDATE Products set quantity= quantity-$item_quantity where id=:pid");
@@ -215,7 +226,7 @@ if ($valid == true && $payment != -1) {
         <br>
 <br>
         <br>
-        
+
         <button id="placeOrder" type="submit" name="submit" value="Submit" ">Place Order</button>
 
         <br>
@@ -229,3 +240,5 @@ if ($valid == true && $payment != -1) {
         <br>
     </form>
 <?php require(__DIR__ . "/partials/flash.php");
+
+

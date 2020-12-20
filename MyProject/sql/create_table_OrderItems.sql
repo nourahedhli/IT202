@@ -8,3 +8,5 @@ CREATE TABLE OrderItems (
     foreign key (order_id) references Orders (id),
     foreign key (product_id) references Products (id)
 )
+
+
