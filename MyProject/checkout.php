@@ -27,16 +27,10 @@ flash("results not working".var_export($stmt->errorInfo(), true));
     foreach ($results as $product):
     ?>
     <div> Product: <?php echo ($product["product"]); ?>
-
-
     </div>
     <div> Product Quantity: <?php echo ($product["Quantity"] ) ;?> </div>
     <div> Product's Price: <?php echo ($product["product"]) ;?> </div>
-
-
-
-
-    <div> Order Total: <?php
+   <div> Order Total: <?php
         $xTotal= ((float)($product["product"]) * (int)($product["Quantity"]));
         echo ($xTotal);
     $totalItems = $totalItems + $xTotal ;
@@ -44,9 +38,6 @@ flash("results not working".var_export($stmt->errorInfo(), true));
     <?php endforeach; ?>
 
 </div>
-
-
-
 
 <?php
 // shipping information
@@ -71,8 +62,6 @@ if(isset($_POST["submit"])) {
     // for the address
 $add = $_POST["adr"] . ", " . $_POST["city"] . ", " .$_POST["state"]."  ".$_POST["zip"];
 
-
-
 $db = getDB();
 $stmt = $db->prepare("SELECT Cart.product_id,Cart.quantity as CartQ AND Products.name,Products.quantity as ProductQ FROM Cart Join Products on Cart.product_id = Products.id JOIN Users on Cart.user_id = Users.id where Cart.user_id=:id");
 $r= $stmt->execute([":id" => $userID]);
@@ -92,22 +81,11 @@ foreach($products as $product){
 }
 
 
-
-
-
-
-
 if ($valid == true && $payment != -1) {
     $db = getDB();
     $stmt = $db->prepare("SELECT product_id, quantity, price , created From Cart Join Products on Cart.product_id = Products.id JOIN Users on Cart.user_id = Users.id where Cart.user_id=:id ");
     $r = $stmt->execute([":id" => $id]);
     $OrderItems = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-
-
-
-
-
 
         $db = getDB();
     $stmt = $db->prepare("INSERT INTO Orders (user_id,total_price,address,payment_method) VALUES (:user,:total,:add,:pay)");
@@ -115,11 +93,7 @@ if ($valid == true && $payment != -1) {
         ":user"=>$id,
         ":total"=>$price,
         ":add"=>$add,
-
         ":pay"=>$payment
-
-
-
     ]);
     flash("for order table".var_export($stmt->errorInfo(), true));
 
@@ -146,14 +120,10 @@ if ($valid == true && $payment != -1) {
             ":pid" => $product_id,
             ":q" => $item_quantity,
             ":p" => $price
-
-
         ]);
         flash("for orderItems table".var_export($stmt->errorInfo(), true));
 
-
-
-//Update the Products table Quantity for each item to deduct the Ordered Quantity
+        //Update the Products table Quantity for each item to deduct the Ordered Quantity
         $db = getDB();
         $stmt = $db->prepare("UPDATE Products set quantity= quantity - :q where id=:pid");
         $r = $stmt->execute([":pid" => $product_id, ":q" => $item_quantity]);
@@ -169,20 +139,10 @@ if ($valid == true && $payment != -1) {
         //Redirect user to Order Confirmation Page
         flash("Thank you. Now you will see your confirmation info");
 
-
-
 }
 
-
-
-
-
-//Make entry into Orders table
-
 ?>
-
-
-    <form method="POST">
+   <form method="POST">
         <h4>Fill In the Form </h4>
         <br>
         <label>Choose Payment Type:</label>
@@ -215,9 +175,7 @@ if ($valid == true && $payment != -1) {
         <br>
 <br>
         <br>
-
         <input id="placeOrder" type="submit" name="submit" value="Submit" />
-
         <br>
         <br>
         <br>
