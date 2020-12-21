@@ -17,7 +17,7 @@ $db = getDB();
 $stmt = $db->prepare("SELECT Products.name,c.product_id, c.id,c.quantity as Quantity ,c.price as product FROM Cart as c JOIN Users on c.user_id = Users.id LEFT JOIN Products  on Products.id = c.product_id where c.user_id = :id ORDER by product");
 $r= $stmt->execute([":id" => $userID]);
 $results= $stmt->fetchAll(PDO::FETCH_ASSOC);
-flash("results not working".var_export($stmt->errorInfo(), true));
+
 ?>
 
 <div class="Items">
@@ -26,18 +26,27 @@ flash("results not working".var_export($stmt->errorInfo(), true));
     $totalItems=0;
     foreach ($results as $product):
     ?>
-    <div> Product: <?php echo ($product["product"]); ?>
+    <br>
+    <br>
+    <div> Product: <?php echo ($product["name"]); ?>
     </div>
+    <hr>
     <div> Product Quantity: <?php echo ($product["Quantity"] ) ;?> </div>
     <div> Product's Price: <?php echo ($product["product"]) ;?> </div>
-   <div> Order Total: <?php
+    <hr>
+    <?php
         $xTotal= ((float)($product["product"]) * (int)($product["Quantity"]));
-        echo ($xTotal);
-    $totalItems = $totalItems + $xTotal ;
-    ?> </div>
-    <?php endforeach; ?>
 
+    $totalItems =(float) ($totalItems + $xTotal );
+
+    ?> <hr>
+    
 </div>
+        <div> Order Total:
+    <?php endforeach; ?>
+<?php echo ($totalItems)?>
+    </div>  <hr>
+
 
 <?php
 // shipping information
@@ -86,7 +95,7 @@ if(isset($_POST["submit"])) {
         $stmt = $db->prepare("SELECT product_id, quantity, price , created From Cart Join Products on Cart.product_id = Products.id JOIN Users on Cart.user_id = Users.id where Cart.user_id=:id ");
         $r = $stmt->execute([":id" => $id]);
         $OrderItems = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        flash("for Select Product".var_export($stmt->errorInfo(), true));
+
 
         $db = getDB();
         $stmt = $db->prepare("INSERT INTO Orders (user_id,total_price,address,payment_method) VALUES (:user,:total,:add,:pay)");
@@ -96,10 +105,10 @@ if(isset($_POST["submit"])) {
             ":add" => $add,
             ":pay" => $payment
         ]);
-        flash("for order table".var_export($stmt->errorInfo(), true));
+
 
         if (!$r) {
-            flash(var_export($stmt->errorInfo(), true));
+
             echo("Something is wrong with the order ");
 
         }
@@ -122,20 +131,20 @@ if(isset($_POST["submit"])) {
                 ":q" => $item_quantity,
                 ":p" => $price
             ]);
-            flash("for orderItems table" . var_export($stmt->errorInfo(), true));
+
 
             //Update the Products table Quantity for each item to deduct the Ordered Quantity
             $db = getDB();
             $stmt = $db->prepare("UPDATE Products set quantity= quantity - :q where id=:pid");
             $r = $stmt->execute([":pid" => $product_id, ":q" => $item_quantity]);
-            flash("for Updating Products Table table" . var_export($stmt->errorInfo(), true));
+
             //Clear out the user’s cart after successful order
 
             $userID = get_user_id();
             $db = getDB();
             $stmt = $db->prepare("DELETE FROM Cart where user_id=:id");
             $r = $stmt->execute([":id" => $userID]);
-            flash("for Deleting from Cart" . var_export($stmt->errorInfo(), true));
+
         }
         //Redirect user to Order Confirmation Page
         flash("Thank you. Now you will see your confirmation info");
