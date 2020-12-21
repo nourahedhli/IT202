@@ -13,7 +13,7 @@ if(isset($_POST["delete"])){
     $stmt = $db->prepare("DELETE FROM Cart where id = :id");
     $r = $stmt->execute([":id"=>$_POST["cartId"]]);
     //fix for example bug
-    //$stmt = $db->prepare("DELETE FROM Cart where id = :id AND user_id = :uid");
+    //$stmt = $db->prepare("DELETE FROM F20_Cart where id = :id AND user_id = :uid");
     //$r = $stmt->execute([":id"=>$_POST["cartId"], ":uid"=>get_user_id()]);
     if($r){
         flash("Deleted item from cart", "success");
@@ -48,14 +48,17 @@ $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
                         Quantity
                     </div>
                     <div class="col">
-                        Subtotal
+                        Total
                     </div>
                     <div class="col">
                         Actions
                     </div>
                 </div>
             </div>
-            <?php foreach($results as $r):?>
+
+            <?php
+            $cartTotal = 0;
+            foreach($results as $r):?>
             <div class="list-group-item">
                 <form method="POST">
                 <div class="row">
@@ -72,7 +75,9 @@ $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
                     </div>
                     <div class="col">
-                        <?php echo $r["sub"];?>
+                        <?php echo $r["sub"] ;
+                        $cartTotal+=(float)$r["sub"];;
+                        ;?>
                     </div>
                     <div class="col">
                         <!-- form split was on purpose-->
@@ -86,6 +91,9 @@ $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 </div>
             </div>
             <?php endforeach;?>
+    <div>
+        <div><b>Total Cart Value: $<?php safer_echo($cartTotal); ?></b></div>
+    </div>
         <?php else:?>
         <div class="list-group-item">
             No items in cart
@@ -93,4 +101,10 @@ $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
         <?php endif;?>
         </div>
     </div>
+    <br>
+<?php if(!empty($results)):?>
+    <a type="button" href="checkout.php">Checkout</a>
+<?php endif;?>
+    <br><br>
 <?php require(__DIR__ . "/partials/flash.php");
+

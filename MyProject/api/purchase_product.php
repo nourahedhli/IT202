@@ -35,9 +35,8 @@ $total=0;
 $total = $product["price"] + $total;
 $max = 45;
 $percent = $total / $max;
-//TODO egg base_rate, mod min/max should increase the time of hatching
-//Incubator stats should reduce time of hatching
-//$eggTypes = ["Ancient", "Legendary", "Rare", "Uncommon", "Common"];
+
+
 
 
 //https://www.delftstack.com/howto/php/how-to-add-days-to-date-in-php/
@@ -87,4 +86,6 @@ else {
 }
 
 ?>
+
+
 
