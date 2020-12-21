@@ -76,7 +76,7 @@ require_once(__DIR__ . "/../lib/helpers.php");
 
                             Cart</a>
 
-
+                        <a class="nav-link" href="<?php echo getURL("OwnerProducts.php"); ?>">Product Quantity List</a>
 
 
                         <a class="nav-link" href="<?php echo getURL("test/test_list_cart.php"); ?>">View
